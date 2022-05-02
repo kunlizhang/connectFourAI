@@ -1,4 +1,6 @@
 from ConnectFourBoard import ConnectFourBoard
+
+
 class Node:
     def __init__(self, player1: int, player2: int, col: int, game_state: ConnectFourBoard, children: ['Node']):
         """

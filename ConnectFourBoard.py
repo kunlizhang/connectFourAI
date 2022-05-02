@@ -1,5 +1,6 @@
 import copy
 
+
 class ConnectFourBoard:
     """
     This class handles the game being played

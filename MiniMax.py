@@ -16,26 +16,18 @@ class MiniMax:
     def construct_game_tree(self, curr: Node, depth: int):
         """
         Constructs a game tree of boards
-        :param root:    The current node to construct the game tree
+        :param curr:    The current node to construct the game tree
         :param depth:   The current depth of the tree
         :return:        Void
         """
         for i in range(self.root.game_state.WIDTH):
             if not self.gb.make_move(i):
                 continue
-            winner = self.gb.check_for_winner()
-            if winner == 1:
-                p1_score = 100000000
-                p2_score = -100000000
-            elif winner == 2:
-                p2_score = 100000000
-                p1_score = -100000000
-            else:
-                p1_score = fn.countPossibleFours(1, self.gb)
-                p2_score = fn.countPossibleFours(2, self.gb)
+            p1_score = fn.get_score(1, self.gb)
+            p2_score = fn.get_score(2, self.gb)
             node = Node(p1_score, p2_score, i, self.gb.get_state(), [])
-            self.root.add(node)
-            if depth < self.DEPTH:
+            curr.add(node)
+            if depth < self.DEPTH and self.gb.check_for_winner() == 0:
                 self.construct_game_tree(node, depth + 1)
             self.gb.revert_move(i)
 
@@ -46,51 +38,41 @@ class MiniMax:
         :return:    The int of the best column for the move.
         """
         player = gb.currPlayer
-        self.root = Node(fn.countPossibleFours(1, gb), fn.countPossibleFours(2, gb), None, gb, [])
+        self.root = Node(fn.get_score(1, gb), fn.get_score(2, gb), None, gb, [])
         self.construct_game_tree(self.root, 0)
-        best_node = self.get_move_recursive_helper(self.root, True, player)
-        return best_node.col
+        best_col, score = self.get_move_recursive_helper(self.root, False, player)
+        print(score)
+        return best_col
 
-    def get_move_recursive_helper(self, curr: Node, min: bool, player: int) -> Node:
+    def get_move_recursive_helper(self, curr: Node, minimising: bool, player: int) -> [int, int]:
         """
         Recursive helper function for minimax algorithm.
-        :param player:  The player that originally called to get move
-        :param curr:    The current node
-        :param min:     True if we are minimising, false if maximising
-        :return:        The minimum/maximum node
+        :param player:      The player that originally called to get move
+        :param curr:        The current node
+        :param minimising:  True if we are minimising, false if maximising
+        :return:            The column chosen and its score for the player
         """
-        if len(curr.children) == 0:
-            return curr
-        elif min:
-            lowest_score_node = None
+        if len(curr.children) == 0: # The current move is at the end of the tree
+            return curr.col, curr.get_score(player)
+        elif minimising:
+            lowest_child_score = math.inf
+            lowest_child_col = None
             # Gets the minimum maximum child of the current node
-            for node in curr.children:
-                curr_max_child = self.get_move_recursive_helper(node, False, player)
-                if lowest_score_node is None or curr_max_child.get_score(player) < lowest_score_node.get_score(player):
-                    lowest_score_node = curr_max_child
-            return lowest_score_node
+            for child in curr.children:
+                child_col, child_score = self.get_move_recursive_helper(child, False, player)
+                if child_score < lowest_child_score:
+                    lowest_child_score = child_score
+                    lowest_child_col = child_col
+            return lowest_child_col, lowest_child_score
         else:
-            highest_score_node = None
-            # Gets the maximum child of the current node
-            for node in curr.children:
-                curr_min_child = self.get_move_recursive_helper(node, True, player)
-                if highest_score_node is None or curr_min_child.get_score(player) > highest_score_node.get_score(player):
-                    highest_score_node = curr_min_child
-            return highest_score_node
-
-
-    def get_max(self, nodes: [Node], player: int) -> Node:
-        res = nodes[0]
-        for child in nodes:
-            if child.get_score(player) >= res:
-                res = child
-        return res
-
-    def get_min(self, nodes: [Node], player: int) -> Node:
-        res = nodes[0]
-        for child in nodes:
-            if child.get_score(player) <= res:
-                res = child
-        return res
+            highest_child_score = -math.inf
+            highest_child_col = None
+            # Gets the maximum minimum child of the current node
+            for child in curr.children:
+                child_col, child_score = self.get_move_recursive_helper(child, True, player)
+                if child_score > highest_child_score:
+                    highest_child_score = child_score
+                    highest_child_col = child_col
+            return highest_child_col, highest_child_score
 
 
