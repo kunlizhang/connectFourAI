@@ -54,14 +54,14 @@ def get_weighting(frame: [int], player: int) -> int:
     if frame.count(player) == 4:
         score += 100
     elif frame.count(player) == 3 and frame.count(0) == 1:
-        score += 10
+        score += 15
     elif frame.count(player) == 2 and frame.count(0) == 2:
         score += 5
 
     if frame.count(other_player) == 4:
-        score -= 400
+        score -= 100
     elif frame.count(other_player) == 3 and frame.count(0) == 1:
-        score -= 8
+        score -= 10
     elif frame.count(other_player) == 2 and frame.count(0) == 2:
         score -= 4
     return score

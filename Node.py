@@ -29,4 +29,8 @@ class Node:
             return None
 
     def __str__(self):
-        return str(self.player1) + " " + str(self.player2) + " " + str(self.col)
+        res = "Move: " + str(self.col)
+        res += " P1: " + str(self.player1)
+        res += " P2: " + str(self.player2)
+        res += " Children: " + str(len(self.children))
+        return res

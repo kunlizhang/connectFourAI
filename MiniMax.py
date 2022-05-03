@@ -41,7 +41,8 @@ class MiniMax:
         self.root = Node(fn.get_score(1, gb), fn.get_score(2, gb), None, gb, [])
         self.construct_game_tree(self.root, 0)
         best_col, score = self.get_move_recursive_helper(self.root, False, player)
-        print(score)
+        print("Chosen score: " + str(score))
+        # print("Chosen col: " + str(best_col))
         return best_col
 
     def get_move_recursive_helper(self, curr: Node, minimising: bool, player: int) -> [int, int]:
@@ -62,7 +63,8 @@ class MiniMax:
                 child_col, child_score = self.get_move_recursive_helper(child, False, player)
                 if child_score < lowest_child_score:
                     lowest_child_score = child_score
-                    lowest_child_col = child_col
+                    lowest_child_col = child.col
+            # print("Lowest:" + str(lowest_child_score))
             return lowest_child_col, lowest_child_score
         else:
             highest_child_score = -math.inf
@@ -72,7 +74,8 @@ class MiniMax:
                 child_col, child_score = self.get_move_recursive_helper(child, True, player)
                 if child_score > highest_child_score:
                     highest_child_score = child_score
-                    highest_child_col = child_col
+                    highest_child_col = child.col
+            # print("Highest:" + str(highest_child_score))
             return highest_child_col, highest_child_score
 
 
