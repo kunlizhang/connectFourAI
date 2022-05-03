@@ -83,8 +83,15 @@ class ConnectFourBoard:
         for i in reversed(range(self.HEIGHT)):
             res += "| "
             for j in range(self.WIDTH):
-                res += str(self.board[i][j]) + " | "
+                if self.board[i][j] == 0:
+                    res += " "
+                elif self.board[i][j] == 1:
+                    res += "X"
+                else:
+                    res += "O"
+                res += " | "
             res += "\n"
+        res += "  0   1   2   3   4   5   6  "
         return res
 
     def get_state(self):

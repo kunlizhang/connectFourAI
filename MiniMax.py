@@ -11,7 +11,7 @@ class MiniMax:
         """
         self.root = Node(0, 0, None, gb, [])
         self.gb = gb
-        self.DEPTH = 4
+        self.DEPTH = 3
 
     def construct_game_tree(self, curr: Node, depth: int):
         """
