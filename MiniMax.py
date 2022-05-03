@@ -7,11 +7,11 @@ class MiniMax:
     def __init__(self, gb: ConnectFourBoard):
         """
         Initialises the MiniMax algorithm
-        :param gb: The gameboard (must be an empty gameboard)
+        :param gb: The game board this algorithm will be used with, provides a reference to it
         """
-        self.root = Node(0, 0, None, gb, [])
+        self.root = Node(0, 0, None, [])
         self.gb = gb
-        self.DEPTH = 3
+        self.DEPTH = 4
 
     def construct_game_tree(self, curr: Node, depth: int):
         """
@@ -20,28 +20,28 @@ class MiniMax:
         :param depth:   The current depth of the tree
         :return:        Void
         """
-        for i in range(self.root.game_state.WIDTH):
+        for i in range(self.gb.WIDTH):
             if not self.gb.make_move(i):
                 continue
             p1_score = fn.get_score(1, self.gb)
             p2_score = fn.get_score(2, self.gb)
-            node = Node(p1_score, p2_score, i, self.gb.get_state(), [])
+            node = Node(p1_score, p2_score, i, [])
             curr.add(node)
             if depth < self.DEPTH and self.gb.check_for_winner() == 0:
                 self.construct_game_tree(node, depth + 1)
             self.gb.revert_move(i)
 
-    def get_move(self, gb: ConnectFourBoard) -> int:
+    def get_move(self) -> int:
         """
         Gets the best move for the current player.
         :param gb:  The current game board.
         :return:    The int of the best column for the move.
         """
-        player = gb.currPlayer
-        self.root = Node(fn.get_score(1, gb), fn.get_score(2, gb), None, gb, [])
+        player = self.gb.curr_player
+        self.root = Node(fn.get_score(1, self.gb), fn.get_score(2, self.gb), None, [])
         self.construct_game_tree(self.root, 0)
         best_col, score = self.get_move_recursive_helper(self.root, False, player, -math.inf, math.inf)
-        print("Chosen score: " + str(score))
+        # print("Chosen score: " + str(score))
         # print("Chosen col: " + str(best_col))
         return best_col
 

@@ -9,7 +9,7 @@ class ConnectFourBoard:
         self.HEIGHT = 6
         self.WIDTH = 7
         self.board = [[0] * self.WIDTH for _ in range(self.HEIGHT) ]
-        self.currPlayer = 1
+        self.curr_player = 1
 
     def make_move(self, col: int) -> bool:
         """
@@ -19,7 +19,7 @@ class ConnectFourBoard:
         """
         for i in range(self.HEIGHT):
             if self.board[i][col] == 0:
-                if self.currPlayer == 1:
+                if self.curr_player == 1:
                     self.board[i][col] = 1
                 else:
                     self.board[i][col] = 2
@@ -42,10 +42,10 @@ class ConnectFourBoard:
 
     def toggle_curr_player(self):
         """Toggles the current player of the game."""
-        if self.currPlayer == 1:
-            self.currPlayer = 2
+        if self.curr_player == 1:
+            self.curr_player = 2
         else:
-            self.currPlayer = 1
+            self.curr_player = 1
 
     def check_for_winner(self) -> int:
         """
@@ -91,7 +91,9 @@ class ConnectFourBoard:
                     res += "O"
                 res += " | "
             res += "\n"
-        res += "  0   1   2   3   4   5   6  "
+        res += "  "
+        for i in range(self.WIDTH):
+            res += str(i) + "   "
         return res
 
     def get_state(self):

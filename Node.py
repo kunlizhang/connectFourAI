@@ -2,7 +2,7 @@ from ConnectFourBoard import ConnectFourBoard
 
 
 class Node:
-    def __init__(self, player1: int, player2: int, col: int, game_state: ConnectFourBoard, children: ['Node']):
+    def __init__(self, player1: int, player2: int, col: int, children: ['Node']):
         """
         A node for the MiniMax tree.
         :param player1:     Player 1's score
@@ -14,7 +14,7 @@ class Node:
         self.player1 = player1
         self.player2 = player2
         self.col = col
-        self.game_state = game_state
+        # self.game_state = game_state
         self.children = children
 
     def add(self, node: 'Node'):
