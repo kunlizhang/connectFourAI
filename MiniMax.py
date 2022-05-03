@@ -1,5 +1,5 @@
 from ConnectFourBoard import ConnectFourBoard
-import helperFunctions as fn
+import helper_functions as fn
 from Node import Node
 import math
 
