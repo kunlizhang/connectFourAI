@@ -11,7 +11,7 @@ class MiniMax:
         """
         self.root = Node(0, 0, None, gb, [])
         self.gb = gb
-        self.DEPTH = 3
+        self.DEPTH = 4
 
     def construct_game_tree(self, curr: Node, depth: int):
         """
@@ -40,12 +40,12 @@ class MiniMax:
         player = gb.currPlayer
         self.root = Node(fn.get_score(1, gb), fn.get_score(2, gb), None, gb, [])
         self.construct_game_tree(self.root, 0)
-        best_col, score = self.get_move_recursive_helper(self.root, False, player)
+        best_col, score = self.get_move_recursive_helper(self.root, False, player, -math.inf, math.inf)
         print("Chosen score: " + str(score))
         # print("Chosen col: " + str(best_col))
         return best_col
 
-    def get_move_recursive_helper(self, curr: Node, minimising: bool, player: int) -> [int, int]:
+    def get_move_recursive_helper(self, curr: Node, minimising: bool, player: int, alpha: int, beta: int) -> [int, int]:
         """
         Recursive helper function for minimax algorithm.
         :param player:      The player that originally called to get move
@@ -60,10 +60,13 @@ class MiniMax:
             lowest_child_col = None
             # Gets the minimum maximum child of the current node
             for child in curr.children:
-                child_col, child_score = self.get_move_recursive_helper(child, False, player)
+                child_col, child_score = self.get_move_recursive_helper(child, False, player, alpha, beta)
                 if child_score < lowest_child_score:
                     lowest_child_score = child_score
                     lowest_child_col = child.col
+                beta = min(beta, lowest_child_score)
+                if beta <= alpha:
+                    break
             # print("Lowest:" + str(lowest_child_score))
             return lowest_child_col, lowest_child_score
         else:
@@ -71,10 +74,13 @@ class MiniMax:
             highest_child_col = None
             # Gets the maximum minimum child of the current node
             for child in curr.children:
-                child_col, child_score = self.get_move_recursive_helper(child, True, player)
+                child_col, child_score = self.get_move_recursive_helper(child, True, player, alpha, beta)
                 if child_score > highest_child_score:
                     highest_child_score = child_score
                     highest_child_col = child.col
+                alpha = max(alpha, highest_child_score)
+                if beta <= alpha:
+                    break
             # print("Highest:" + str(highest_child_score))
             return highest_child_col, highest_child_score
 
